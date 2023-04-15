@@ -1,25 +1,26 @@
-<template>
-  <div>
-    <h1>Login</h1>
+<script setup>
+import { reactive } from 'vue'
+import { router } from '@inertiajs/vue3'
 
-    <form>
-      <div>
-        <label for="usuario">Usuário (e-mail)</label>
-        <input type="text" id="usuario" v-model="usuario" />
-      </div>
+const form = reactive({
+  first_name: null,
+  last_name: null,
+  email: null,
+})
 
-      <div>
-        <label for="senha">Senha</label>
-        <input type="password" id="senha" v-model="senha" />
-      </div>
-
-      <button type="submit">Entrar</button>
-    </form>
-  </div>
-</template>
-
-<script>
-
-export default {
+function submit() {
+  router.post('/users', form)
 }
 </script>
+
+<template>
+  <form @submit.prevent="submit">
+    <label for="first_name">First name:</label>
+    <input id="first_name" v-model="form.first_name" />
+    <label for="last_name">Last name:</label>
+    <input id="last_name" v-model="form.last_name" />
+    <label for="email">Email:</label>
+    <input id="email" v-model="form.email" />
+    <button type="submit">Submit</button>
+  </form>
+</template>

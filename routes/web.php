@@ -16,6 +16,6 @@ use App\Http\Controllers\LoginController;
 
 
 
-Route::get('/login', [LoginController::class, 'login'])->name('site.login');
-Route::post('/autenticar', [LoginController::class, 'autenticar'])->name('site.autenticar');
+Route::get('/login', [LoginController::class, 'login'])->name('site.login')->middleware();
+Route::post('/autenticar', [LoginController::class, 'autenticar'])->name('site.autenticar')->middleware();
 

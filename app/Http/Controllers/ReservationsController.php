@@ -21,6 +21,11 @@ class ReservationsController extends Controller
             'num_people' => 'required|integer|min:1|max:20',
             'remarks' => 'required',
         ]);
+
+        $existingReservation = Reservation::where('date', $request->date)->where('time', $request->time)->first();
+        if ($existingReservation) {
+            return redirect()->back()->with('error', 'Já existe uma reserva para este horário.');
+        }
     
         $newReservation = new Reservation();
         $newReservation->user_id = auth()->user()->id;

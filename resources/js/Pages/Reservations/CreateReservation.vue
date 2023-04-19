@@ -8,17 +8,17 @@
     <div class="center">
         <form @submit.prevent="submit">
             <div class="form-group">
-                <InputLabel for="num_people">Quantidade de Pessoas:</InputLabel>
+                <InputLabel class="required" for="num_people">Quantidade de Pessoas:</InputLabel>
                 <input type="number" name="num_people" id="num_people" v-model="form.num_people" class="form-control" />
             </div>
 
             <div class="form-group">
-                <InputLabel for="date">Data:</InputLabel>
+                <InputLabel class="required" for="date">Data:</InputLabel>
                     <input id="date" name="date" type="date" v-model="form.date" class="form-control" />
             </div>
 
             <div class="form-group">
-                <InputLabel for="time">Horários Disponíveis:</InputLabel>
+                <InputLabel class="required" for="time">Horário:</InputLabel>
                     <select name="time" id="time" v-model="form.time" class="form-control">
                         <option v-for="option in timeOptions" :value="option.value" :key="option.value">{{ option.label }}</option>
                     </select>
@@ -26,7 +26,7 @@
 
 
             <div class="form-group">
-                <InputLabel for="remarks">Comentários adicionais:</InputLabel>
+                <InputLabel for="remarks">Comentários Adicionais (não é obrigatório):</InputLabel>
                 <input type="text" name="remarks" id="remarks" v-model="form.remarks" class="form-control" />
             </div>
 
@@ -54,6 +54,7 @@ const form = reactive({
     remarks: null,
     successMessage: null,
     errorMessage: null,
+    errors: {}
 
 })
 
@@ -78,13 +79,13 @@ const timeOptions = [
 function submit() {
     router.post('/reservations', form, {
         onSuccess: () => {
-            form.successMessage = 'Reserva criada com sucesso!';
+            form.successMessage = 'Reserva solicitada com sucesso!';
                 setTimeout(() => {
                     form.successMessage = null;
             }, 3000);
         },
         onError: () => {
-            form.errorMessage = 'A tentativa de criação de reserva não pôde ser realizada!';
+            form.errorMessage = 'Verifique os campos obrigatórios';
                 setTimeout(() => {
                     form.errorMessage = null;
             }, 3000);
@@ -110,7 +111,8 @@ function submit() {
     width: 100%;
 }
 
-input.invalid {
-    border-color: red;
+.required:before {
+    content:" *"; 
+    color: red;
 }
 </style>

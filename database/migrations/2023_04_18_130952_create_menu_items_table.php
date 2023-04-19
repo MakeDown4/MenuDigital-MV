@@ -23,7 +23,7 @@ class CreateMenuItemsTable extends Migration
             });
     
             Schema::table('menu_items', function (Blueprint $table) {
-                $table->unsignedBigInteger('category_id')->nullable();
+                $table->unsignedBigInteger('category_id')->after('price');
                 $table->foreign('category_id')->references('id')->on('menu_categories')->onDelete('set null');
             });
         }

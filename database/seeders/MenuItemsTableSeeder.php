@@ -20,7 +20,7 @@ class MenuItemsTableSeeder extends Seeder
     
         // Cria 50 itens de menu aleatórios com o category_id definido
         $menuItems = [];
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $categoryId = $categories->random()->id;
             $menuItems[] = [
                 'name' => $faker->word(),

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reservation;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -11,15 +12,14 @@ class ReservationsController extends Controller
     public function create()
     {
         return Inertia::render('Reservations/CreateReservation');
-    }
+    }    
 
     public function store(Request $request)
     {
         $request->validate([
             'date' => 'required|date|after:yesterday',
             'time' => 'required',
-            'num_people' => 'required|integer|min:1|max:20',
-            'remarks' => 'required',
+            'num_people' => 'required|integer|min:1|max:20'
         ]);
 
         $existingReservation = Reservation::where('date', $request->date)->where('time', $request->time)->first();

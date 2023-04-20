@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationsController;
@@ -43,6 +44,19 @@ Route::middleware('auth')->group(function () {
     //Reservations routes
     Route::get('/reservations/create', [ReservationsController::class, 'create'])->name('reservations.create');
     Route::post('/reservations', [ReservationsController::class, 'store'])->name('reservations.store');
-});
+    });
+    //Admin Routes
+    Route::middleware('auth.admin')->group(function () {
+        // Rota do Dashboard Admin
+        Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+        // Rotas do CRUD dos Itens do Cardápio Painel Admin
+        Route::get('/admin/menuItems', [AdminController::class, 'listMenuItems'])->name('admin.menuItems.index');
+        Route::get('/admin/menuItems/create', [AdminController::class, 'createMenuItem'])->name('admin.menuItems.create');
+        Route::post('/admin/menuItems', [AdminController::class, 'storeMenuItem'])->name('admin.menuItems.store');
+        Route::get('/admin/menuItems/{id}/edit', [AdminController::class, 'editMenuItem'])->name('admin.menuItems.edit');
+        Route::put('/admin/menuItems/{id}', [AdminController::class, 'updateMenuItem'])->name('admin.menuItems.update');
+        Route::delete('/admin/menuItems/{id}', [AdminController::class, 'deleteMenuItem'])->name('admin.menuItems.delete');
+    });
 
 require __DIR__.'/auth.php';

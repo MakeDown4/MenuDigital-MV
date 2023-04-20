@@ -13,29 +13,32 @@ class CreateMenuItemsTable extends Migration
      */
     public function up()
     {
+
+        if (!Schema::hasTable('menu_categories')) {
+            Schema::create('menu_categories', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->timestamps();
+            });
+        }
+        
         if (!Schema::hasTable('menu_items')) {
             Schema::create('menu_items', function (Blueprint $table) {
                 $table->id();
                 $table->string('name');
-                $table->string('description');
-                $table->decimal('price', 8, 2);
+                $table->text('description');
+                $table->decimal('price', 10, 2);
+                $table->foreignId('category_id')->constrained('menu_categories');
                 $table->timestamps();
-            });
-    
-            Schema::table('menu_items', function (Blueprint $table) {
-                $table->unsignedBigInteger('category_id')->after('price');
-                $table->foreign('category_id')->references('id')->on('menu_categories')->onDelete('set null');
             });
         }
     }
     
     public function down()
     {
-        Schema::table('menu_items', function (Blueprint $table) {
-            $table->dropForeign(['category_id']);
-            $table->dropColumn('category_id');
+        Schema::dropIfExists('menu_items', function (Blueprint $table) {
+            $table->foreign('category_id')->references('id')->on('menu_categories');
         });
-    
         Schema::dropIfExists('menu_items');
     }    
 }

@@ -55,7 +55,6 @@ const form = reactive({
     successMessage: null,
     errorMessage: null,
     errors: {}
-
 })
 
 const timeOptions = [

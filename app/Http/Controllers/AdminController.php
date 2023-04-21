@@ -62,7 +62,8 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
             'price' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:menu_categories,id'
+            'upload_img' => 'nullable|image|max:2048',
+            'category_id' => 'required|exists:menu_categories,id',
         ]);
         
         // Cria um novo item do cardápio com os dados validados

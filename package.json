@@ -14,13 +14,14 @@
         "postcss": "^8.4.22",
         "tailwindcss": "^3.3.1",
         "vite": "^4.0.0",
-        "vue": "^3.2.41"
+        "vue": "^3.2.47"
     },
     "dependencies": {
         "@inertiajs/vue3": "^1.0.3",
         "@vitejs/plugin-vue": "^4.1.0",
         "bootstrap": "^5.2.3",
         "vue": "^3.2.47",
+        "vue-js-modal": "^2.0.1",
         "vue3-bootstrap": "^1.0.0"
     }
 }

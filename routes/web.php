@@ -51,12 +51,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
         // Rotas do CRUD dos Itens do Cardápio Painel Admin
-        Route::get('/admin/menuItems', [AdminController::class, 'listMenuItems'])->name('admin.menuItems.index');
-        Route::get('/admin/menuItems/create', [AdminController::class, 'createMenuItem'])->name('admin.menuItems.create');
-        Route::post('/admin/menuItems', [AdminController::class, 'storeMenuItem'])->name('admin.menuItems.store');
-        Route::get('/admin/menuItems/{id}/edit', [AdminController::class, 'editMenuItem'])->name('admin.menuItems.edit');
-        Route::put('/admin/menuItems/{id}', [AdminController::class, 'updateMenuItem'])->name('admin.menuItems.update');
-        Route::delete('/admin/menuItems/{id}', [AdminController::class, 'deleteMenuItem'])->name('admin.menuItems.delete');
+        Route::get('/admin/menuitems', [AdminController::class, 'listMenuItems'])->name('admin.menuItems.index');
+        Route::get('/admin/menuitems/create', [AdminController::class, 'createMenuItem'])->name('admin.menuItems.create');
+        Route::post('/admin/menuitems', [AdminController::class, 'storeMenuItem'])->name('admin.menuItems.store');
+        Route::get('/admin/menuitems/{id}/edit', [AdminController::class, 'editMenuItem'])->name('admin.menuItems.edit');
+        Route::put('/admin/menuitems/{id}', [AdminController::class, 'updateMenuItem'])->name('admin.menuItems.update');
+        Route::delete('/admin/menuitems/{id}', [AdminController::class, 'deleteMenuItem'])->name('admin.menuItems.delete');
     });
 
 require __DIR__.'/auth.php';

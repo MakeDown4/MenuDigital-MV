@@ -28,8 +28,7 @@
 
 
 <script>
-import { router } from '@inertiajs/vue3'
-import { usePage } from '@inertiajs/vue3'
+import { usePage, router } from '@inertiajs/vue3'
 
 export default {
   setup() {
@@ -43,18 +42,14 @@ export default {
       visit(route('admin.menuItems.edit', { menuItem: menuItem.id }))
     }
 
-    const deleteMenuItem = async (menuItem) => {
-        const confirmed = confirm(`Tem certeza que deseja excluir o item "${menuItem.name}"?`)
-      if (confirmed) {
-          console.log('a')
-        const response = await router.delete('admin.menuItems.delete', { menuItem: menuItem.id })
-        if (response.status === 200) {
-          alert('Item excluído com sucesso!')
-          // Recarrega a página para atualizar a lista de itens do cardápio
-          location.reload()
-        } else {
-          alert('Ocorreu um erro ao excluir o item.')
-        }
+    function deleteMenuItem (menuItem) {
+      const confirmed = confirm(`Tem certeza que deseja excluir o item "${menuItem.name}"?`)
+      if (confirmed) {router.delete('/admin/menuitems/' +  menuItem.id, {
+          onSuccess: () => {
+          },
+          onError: () => {
+          }
+        });
       }
     }
 

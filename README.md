@@ -1,6 +1,15 @@
-# Projeto de Teste
+# Teste
 
-Este é um projeto de teste utilizando Laravel, Vue3 e Inertia 1.0.3.
+Este é um teste para o projeto XPTO.
+
+## Requisitos
+
+Certifique-se de que seu sistema atende aos seguintes requisitos destes arquivos instalados na máquina:
+
+- PHP >= 7.4
+- Composer
+- Node.js >= 14.x
+- NPM >= 7.x
 
 ## Instalação
 

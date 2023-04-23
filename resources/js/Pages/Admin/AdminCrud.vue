@@ -1,7 +1,7 @@
 <template>
-  <div class="container-list text-center">
   <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
-  <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+    <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+      <div class="container-list text-center">
   <div>
     <h1>Lista de Cardápios</h1>
     <table class="table table-striped">
@@ -9,6 +9,7 @@
         <tr>
           <th>Nome</th>
           <th>Categoria</th>
+          <th>Imagem</th>
           <th>Preço</th>
           <th>Ações</th>
         </tr>
@@ -17,6 +18,7 @@
         <tr v-for="menuItem in menuItems" :key="menuItem.id">
           <td>{{ menuItem.name }}</td>
           <td>{{ menuItem.category.name }}</td>
+          <td>{{ menuItem.upload_img }}</td>
           <td>{{ menuItem.price }}</td>
           <td>
             <button class="btn btn-primary" @click="openEditModal(menuItem)">Editar</button>
@@ -46,11 +48,11 @@
             </div>
             <div class="form-group">
               <label for="upload_img">Imagem do Prato:</label>
-              <input type="file" class="form-control" id="upload_img" name="upload_img">
+              <input type="file" class="form-control" id="upload_img" name="upload_img" @change="uploadImgEdit($event)">
             </div>
             <div class="form-group">
               <label for="price">Preço:</label>
-              <input type="number" class="form-control" id="price" name="price" v-model="formEdit.price">
+              <input type="text" class="form-control" @input="formattedNumberOnEditModal" id="price" name="price" v-model="formEdit.price">
             </div>
             <div class="form-group">
                 <label for="category_id">Categoria:</label>
@@ -69,7 +71,7 @@
 <!-- Modal de Criação -->
   <div>
     <div class="modal" :class="{ 'is-active': showCreateModal }">
-      <form @submitCreate.prevent="submitCreate">
+      <form @submit.prevent="submit">
         <div class="modal-background" @click="showCreateModal = false"></div>
       <div class="modal-content">
         <h2>Criar Cardápio</h2>
@@ -84,11 +86,11 @@
             </div>
             <div class="form-group">
               <label for="upload_img">Imagem do Prato:</label>
-              <input type="file" class="form-control" id="upload_img" name="upload_img">
+              <input type="file" class="form-control" id="upload_img" name="upload_img" @change="uploadImgCreate($event)">
             </div>
             <div class="form-group">
               <label for="price">Preço:</label>
-              <input type="number" class="form-control" id="price" name="price" v-model="formCreate.price">
+              <input type="text" class="form-control" @input="formattedNumberOnCreateModal" id="price" name="price" v-model="formCreate.price">
             </div>
             <div class="form-group">
                 <label for="category_id">Categoria:</label>
@@ -119,7 +121,6 @@ export default {
     const successMessage = ref(null)
     const errorMessage = ref(null)
 
-    
   //Função Edit
     let showEditModal = ref(false);
 
@@ -169,6 +170,7 @@ export default {
     }
 
     return {
+      isSubmitting: false,
       menuItems,
       allCategories,
       showEditModal,
@@ -180,7 +182,6 @@ export default {
         id: null,
         name: null,
         description: null,
-        upload_img: null,
         price: null,
         category_id: null
       },
@@ -190,20 +191,94 @@ export default {
         id: null,
         name: null,
         description: null,
-        upload_img: null,
         price: null,
         category_id: null
       },
     }
   },
   methods: {
-    submit() {
-      router.put('/admin/menuitems/' + this.formEdit.id, this.formEdit)
-    },
-    submitCreate() {
-      router.post('/admin/menuitems/', this.formCreate)
-    },
+  formattedNumberOnCreateModal() {
+      let numberValue = this.formCreate.price;
+
+      numberValue = numberValue.replace(/\D/g,'');
+      numberValue = numberValue.replace(/(\d+)(\d{2})$/, '$1.$2');
+      
+      this.formCreate.price = numberValue;
   },
+  formattedNumberOnEditModal() {
+      let numberValue = this.formEdit.price;
+
+      numberValue = numberValue.replace(/\D/g,'');
+      numberValue = numberValue.replace(/(\d+)(\d{2})$/, '$1.$2');
+      
+      this.formEdit.price = numberValue;
+  },
+  uploadImgEdit(e){
+    this.formEdit.upload_img = e.target.files[0]
+  },
+  uploadImgCreate(e){
+    this.formCreate.upload_img = e.target.files[0]
+  },
+  submit() {
+    if (this.isSubmitting) {
+      // Se uma operação já estiver em andamento, não faz nada
+      return
+    }
+
+    if (this.formEdit.id) {
+        // Se estiver editando, chama a rota de atualização
+        this.isSubmitting = true
+
+        const bodyEdit = new FormData()
+        bodyEdit.append('id', this.formEdit.id)
+        bodyEdit.append('name', this.formEdit.name)
+        bodyEdit.append('description', this.formEdit.description)
+        bodyEdit.append('price', this.formEdit.price)
+        bodyEdit.append('category_id', this.formEdit.category_id)
+        bodyEdit.append('file', this.formEdit.upload_img)
+
+        router.post('/admin/menuitems/' + this.formEdit.id, bodyEdit, {
+          onSuccess: () => {
+            this.successMessage = 'Item atualizado com sucesso!';
+            setTimeout(() => {
+              this.successMessage = null;
+            }, 3000);
+            location.reload()
+          },
+          onError: () => {
+            this.errorMessage = 'Erro ao excluir o item.';
+          },
+          onFinish: () => {
+            this.isSubmitting = false
+          }
+        })
+      } else {
+        // Se estiver criando, chama a rota de criação
+        this.isSubmitting = true
+
+        const bodyCreate = new FormData()
+        bodyCreate.append('id', this.formCreate.id)
+        bodyCreate.append('name', this.formCreate.name)
+        bodyCreate.append('description', this.formCreate.description)
+        bodyCreate.append('price', this.formCreate.price)
+        bodyCreate.append('category_id', this.formCreate.category_id)
+        bodyCreate.append('file', this.formCreate.upload_img)
+        
+        router.post('/admin/menuitems/create', bodyCreate, {
+          onSuccess: () => {
+            this.successMessage = 'Cardápio Criado com Sucesso !';
+            location.reload()
+          },
+          onError: () => {
+            this.errorMessage = 'Erro ao criar o item do cardápio';
+          },
+          onComplete: () => {
+            this.isSubmitting = false
+          }
+        })
+      }
+    }
+  }
 }
 </script>
 

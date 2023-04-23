@@ -6,6 +6,7 @@ use App\Models\MenuCategory;
 use App\Models\MenuItem;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class AdminController extends Controller
@@ -35,7 +36,7 @@ class AdminController extends Controller
     public function listMenuItems()
     {
         // Recupera todos os itens do cardápio do banco de dados
-        $menuItems = MenuItem::with('category')->get();
+        $menuItems = MenuItem::with('category')->orderBy('id', 'desc')->get();
 
         $allCategories = MenuCategory::all();
 
@@ -46,63 +47,43 @@ class AdminController extends Controller
         ]);
     }
 
-    public function createMenuItem()
+    public function createMenuItem(Request $request)
     {
-        // Recupera todas as categorias de menu do banco de dados
-        $menuCategories = MenuCategory::all();
-
-        // Retorna a view Inertia para criar um novo item do cardápio
-        return Inertia::render('Admin/AdminCrud', [
-            'menuCategories' => $menuCategories
-        ]);
-    }
-    
-    public function storeMenuItem(Request $request)
-    {
-        // Valida os dados do formulário
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
             'price' => 'required|numeric|min:0',
-            'upload_img' => 'nullable|image|max:2048',
+            'file' => 'nullable|image|max:4096',
             'category_id' => 'required|exists:menu_categories,id',
         ]);
-        
-        // Cria um novo item do cardápio com os dados validados
-        $menuItem = MenuItem::create($validatedData);
-        
+
+        $storagePath = Storage::disk('local')->put('/menuImg', $validatedData['file']);
+
+        $data = array_merge($validatedData, ['upload_img' => $validatedData['file']->getClientOriginalName()]);
+
+        $menuItem = MenuItem::create($data);
+
         // Redireciona o usuário de volta para a lista de itens do cardápio
         return redirect()->route('admin.menuItems.index')->with('success', 'Item do cardápio criado com sucesso!');
-    }
-
-    public function editMenuItem($id)
-    {
-        // Recupera o item do cardápio com o ID fornecido do banco de dados
-        $editMenuItem = MenuItem::findOrFail($id);
-
-        // Recupera todas as categorias de menu do banco de dados
-        $menuCategories = MenuCategory::all();
-
-        // Retorna a view Inertia para editar o item do cardápio
-        return Inertia::render('Admin/MenuItems/Edit', [
-            'menuItem' => $editMenuItem,
-            'menuCategories' => $menuCategories
-        ]);
-    }
+    } 
 
     public function updateMenuItem(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'string|max:255',
             'description' => 'nullable|string|max:1000',
-            'price' => 'required|numeric|min:0',
-            'upload_img' => 'nullable|image|max:2048',
-            'category_id' => 'required|exists:menu_categories,id'
+            'price' => 'numeric|min:0',
+            'file' => 'nullable|image|max:4096',
+            'category_id' => 'exists:menu_categories,id'
         ]);
+
+        $storagePath = Storage::disk('local')->put('/menuImg', $validatedData['file']);
+
+        $data = array_merge($validatedData, ['upload_img' => $validatedData['file']->getClientOriginalName()]);
 
         $updateMmenuItem = MenuItem::findOrFail($id);
 
-        $updateMmenuItem->update($validatedData);
+        $updateMmenuItem->update($data);
 
         return to_route('admin.menuItems.index')->with('success', 'Item do cardápio atualizado com sucesso!');
     }

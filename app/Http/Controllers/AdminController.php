@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MenuCategory;
 use App\Models\MenuItem;
+use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -45,6 +46,48 @@ class AdminController extends Controller
             'menuItems' => $menuItems,
             'allCategories' => $allCategories
         ]);
+    }
+
+    public function listReservationsAdmin()
+    {
+        $reservationsWithName = Reservation::with('user')->get();
+    
+        $reservations = $reservationsWithName->map(function ($reservation) {
+            return [
+                'id' => $reservation->id,
+                'user_id' => $reservation->user_id,
+                'user_name' => $reservation->user->name,
+                'date' => $reservation->date,
+                'time' => $reservation->time,
+                'remarks' => $reservation->remarks,
+                'num_people' => $reservation->num_people,
+                'isConfirmed' => $reservation->is_confirmed
+            ];
+        });
+
+        return Inertia::render('Admin/AdminListReservations', [
+            'reservations' => $reservations
+        ]);
+    }    
+
+    public function confirmReservationsAdmin($id)
+    {
+        try {
+            $reservations = Reservation::findOrFail($id);
+            $reservations->update(['is_confirmed' => 1]);
+
+            return redirect()->back()->with('success', 'Reserva confirmada com sucesso!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao confirmar a reserva.');
+        }
+    }
+
+    public function deleteReservationsAdmin($id)
+    {
+        $reservation = Reservation::findOrFail($id);
+        $reservation->delete();
+    
+        return redirect()->back()->with('success', 'A reserva foi excluída com sucesso.');
     }
 
     public function createMenuItem(Request $request)

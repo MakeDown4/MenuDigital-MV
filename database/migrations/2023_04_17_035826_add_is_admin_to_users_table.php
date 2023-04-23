@@ -32,6 +32,5 @@ class AddIsAdminToUsersTable extends Migration
             $table->dropColumn('is_admin');
         });
     }
-    
 }
 

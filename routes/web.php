@@ -47,10 +47,15 @@ Route::middleware('auth')->group(function () {
     });
     //Admin Routes
     Route::middleware('auth.admin')->group(function () {
-        // Rota do Dashboard Admin
+        // Dashboard admin
         Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-        // Rotas do CRUD dos Itens do Cardápio Painel Admin
+        //Route list and confirm reservations
+        Route::get('/admin/list-reservations', [AdminController::class, 'listReservationsAdmin'])->name('admin.list.reservations');
+        Route::delete('/admin/list-reservations/{id}', [AdminController::class, 'deleteReservationsAdmin'])->name('admin.list.reservations.delete');
+        Route::put('/admin/list-reservations/{id}', [AdminController::class, 'confirmReservationsAdmin'])->name('admin.list.reservations.update');
+
+        // Crud routes Menu Items
         Route::get('/admin/menuitems', [AdminController::class, 'listMenuItems'])->name('admin.menuItems.index');
         Route::post('/admin/menuitems/create', [AdminController::class, 'createMenuItem'])->name('admin.menuItems.create');
         Route::post('/admin/menuitems/{id}', [AdminController::class, 'updateMenuItem'])->name('admin.menuItems.update');

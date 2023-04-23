@@ -13,8 +13,9 @@ class Reservation extends Model
         'user_id',
         'date',
         'time',
-        'number_of_guests',
-        'status'
+        'remarks',
+        'num_people',
+        'is_confirmed'
     ];
 
     public function user()
@@ -25,5 +26,10 @@ class Reservation extends Model
     public function menuItems()
     {
         return $this->belongsToMany(MenuItem::class, 'reservation_menu_items')->withPivot('quantity');
+    }
+
+    public function getUserNameAttribute()
+    {
+        return $this->user->name;
     }
 }

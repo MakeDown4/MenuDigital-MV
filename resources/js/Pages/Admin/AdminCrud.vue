@@ -1,9 +1,10 @@
 <template>
+  <div class="container-list text-center">
   <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
   <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
   <div>
-    <h1>Itens do Cardápio</h1>
-    <table class="table table-striped mx-auto text-center">
+    <h1>Editar Cardápio</h1>
+    <table class="table table-striped">
       <thead>
         <tr>
           <th>Nome</th>
@@ -18,7 +19,7 @@
           <td>{{ menuItem.category.name }}</td>
           <td>{{ menuItem.price }}</td>
           <td>
-            <button class="btn btn-primary" @click="showEditForm(menuItem)">Editar</button>
+            <button class="btn btn-primary" @click="openEditModal(menuItem)">Editar</button>
             <button class="btn btn-danger" @click="deleteMenuItem(menuItem)">Excluir</button>
           </td>
         </tr>
@@ -27,70 +28,75 @@
     <button class="btn btn-success" @click="showCreateForm">Adicionar Item</button>
   </div>
 
-  <div v-if="showEditModal == true">
-    <div class="modal fade show" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Editar Item do Cardápio</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Fechar" @click="showEditModal = false">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form @submit.prevent="submitEditForm">
-              <div class="form-group">
-                <label for="edit-item-name">Nome do Item:</label>
-                <input type="text" class="form-control" id="edit-item-name" v-model="editForm.name">
-              </div>
-              <div class="form-group">
-                <label for="edit-item-category">Categoria:</label>
-                <select class="form-control" id="edit-item-category" v-model="editForm.category_id">
-                  <!-- <option v-for="category in categories" :value="category.id">{{ category.name }}</option> -->
+  <div>
+    <div class="modal" :class="{ 'is-active': showEditModal }">
+      <form @submit.prevent="submit">
+        <div class="modal-background" @click="showEditModal = false"></div>
+      <div class="modal-content">
+        <div class="field">
+            <div class="form-group">
+              <label for="name">Nome:</label>
+              <input type="text" class="form-control" id="name" name="name" v-model="formEdit.name">
+            </div>
+            <div class="form-group">
+              <label for="description">Descrição do Prato:</label>
+              <textarea class="form-control" id="description" name="description" v-model="formEdit.description"> </textarea >
+            </div>
+            <div class="form-group">
+              <label for="upload_img">Imagem do Prato:</label>
+              <input type="file" class="form-control" id="upload_img" name="upload_img">
+            </div>
+            <div class="form-group">
+              <label for="price">Preço:</label>
+              <input type="number" class="form-control" id="price" name="price" v-model="formEdit.price">
+            </div>
+            <div class="form-group">
+                <label for="category_id">Categoria:</label>
+                <select class="form-control" id="category_id" name="category_id" v-model="formEdit.category_id">
+                  <option v-for="category in allCategories" :key="category.id" :value="category.id">{{ category.name }}</option>
                 </select>
               </div>
-              <div class="form-group">
-                <label for="edit-item-price">Preço:</label>
-                <input type="number" step="0.01" class="form-control" id="edit-item-price" v-model="editForm.price">
-              </div>
-              <button type="submit" class="btn btn-primary">Salvar</button>
-            </form>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
           </div>
+            <button class="modal-close is-large" aria-label="close" @click="showEditModal = false"></button>
+          </form>
         </div>
       </div>
     </div>
-    <div class="modal-backdrop fade show"></div>
-  </div>
+
 </template>
 
 <script>
 import { usePage, router } from '@inertiajs/vue3'
-import { ref, reactive } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 
 export default {
-  setup() {
-    const { props: { menuItems }, route, visit, inertia } = usePage()
+  data() {
+    const { props: { menuItems, allCategories }, route, visit, inertia } = usePage()
 
     const successMessage = ref(null)
     const errorMessage = ref(null)
 
-    const createMenuItem = () => {
-      visit(route('admin.menuItems.create'))
+    let showEditModal = ref(false);
+
+    function openEditModal(menuItem){
+      showEditModal.value = true
+      this.formEdit.id = menuItem.id
+      this.formEdit.name = menuItem.name
+      this.formEdit.description = menuItem.description
+      this.formEdit.upload_img = menuItem.upload_img
+      this.formEdit.price = menuItem.price
+      this.formEdit.category_id = menuItem.category_id
     }
 
-    const showEditForm = (menuItem) => {
-      editForm = { ...menuItem }
-      showEditModal = true
-      console.log(showEditModal)
-    }
-
-    function submitEditForm(item) {
-      const { component, props } = usePage();
-
-      router.put('/admin/menuitems/' + item.id, {
-        item
+    onMounted(() => {
+      const modalEl = document.querySelector('.modal')
+      modalEl.addEventListener('shown.bs.modal', () => {
+        const inputEl = modalEl.querySelector('input')
+        inputEl.focus()
       })
-    }
+    })
 
     function deleteMenuItem (menuItem) {
       const confirmed = confirm(`Tem certeza que deseja excluir o item "${menuItem.name}"?`)
@@ -112,14 +118,70 @@ export default {
 
     return {
       menuItems,
-      createMenuItem,
-      showEditForm,
-      submitEditForm,
-      showEditModal: false,
+      allCategories,
+      showEditModal,
       deleteMenuItem,
       successMessage,
-      errorMessage
+      errorMessage,
+      openEditModal,
+      formEdit: {
+        id: null,
+        name: null,
+        description: null,
+        upload_img: null,
+        price: null,
+        category_id: null
+      }
     }
-  }
+  },
+  methods: {
+    submit() {
+      router.put('/admin/menuitems/' + this.formEdit.id, this.formEdit)
+    },
+  },
 }
 </script>
+
+<style>
+.modal {
+  display: none;
+}
+.modal.is-active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-background {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.modal-content {
+  background-color: #fff;
+  padding: 1rem;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  padding: 0.75rem;
+  margin: 0.5rem;
+}
+
+.container-list{
+  display: flex;
+  justify-content: center;
+}
+
+.table{
+  display: inline-table;
+}
+</style>

@@ -13,7 +13,8 @@ class MenuItem extends Model
         'name',
         'description',
         'price',
-        'image_url'
+        'upload_img',
+        'category_id'
     ];
 
     public function reservations()

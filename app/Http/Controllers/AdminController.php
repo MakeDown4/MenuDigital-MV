@@ -37,9 +37,12 @@ class AdminController extends Controller
         // Recupera todos os itens do cardápio do banco de dados
         $menuItems = MenuItem::with('category')->get();
 
+        $allCategories = MenuCategory::all();
+
         // Retorna a view Inertia com os itens do cardápio
         return Inertia::render('Admin/AdminCrud', [
-            'menuItems' => $menuItems
+            'menuItems' => $menuItems,
+            'allCategories' => $allCategories
         ]);
     }
 
@@ -90,7 +93,6 @@ class AdminController extends Controller
 
     public function updateMenuItem(Request $request, $id)
     {
-        // Valida os dados do formulário
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',

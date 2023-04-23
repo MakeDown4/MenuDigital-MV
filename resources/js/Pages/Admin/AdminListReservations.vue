@@ -1,9 +1,9 @@
 <template>
     <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
     <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-  <div>
+  <div class="text-center">
     <h1>Lista de Reservas</h1>
-    <table class="table">
+    <table class="table table-striped">
       <thead>
         <tr>
           <th class="text-center">Nome</th>

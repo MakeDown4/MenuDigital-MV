@@ -1,6 +1,6 @@
 # Teste
 
-Este é um teste para o projeto XPTO.
+Este é um teste para o projeto de Cardápio Digital da Moraes Velleda.
 
 ## Requisitos
 

@@ -23,6 +23,7 @@
           <td class="text-center">{{ reservation.num_people }}</td>
           <td>            
               <button v-if="!reservation.isConfirmed" class="btn btn-success" @click="confirmReservation(reservation.id)">Confirmar Reserva</button>
+              <button v-else class="btn btn-warning" @click="undoConfirmation(reservation.id)">Desfazer Confirmação</button>
               <button class="btn btn-danger" @click="deleteReservation(reservation.id)">Excluir</button>
           </td>
         </tr>
@@ -62,6 +63,26 @@ const confirmed = confirm(`Tem certeza que deseja confirmar a reserva "${reserva
       },
       onError: () => {
         errorMessage.value = 'Erro ao confirmar a reserva.';
+      },
+    });
+  }
+};
+
+const undoConfirmation = (reservationId) => {
+  const confirmed = confirm(`Tem certeza que deseja desfazer a confirmação da reserva "${reservationId}"?`);
+  if (confirmed) {
+    router.put(`/admin/list-reservations/undo-confirm/${reservationId}`, {
+      is_confirmed: 0
+    }, {
+      onSuccess: () => {
+        successMessage.value = 'Confirmação desfeita com sucesso!';
+        setTimeout(() => {
+          successMessage.value = null;
+        }, 3000);
+        location.reload();
+      },
+      onError: () => {
+        errorMessage.value = 'Erro ao desfazer a confirmação.';
       },
     });
   }

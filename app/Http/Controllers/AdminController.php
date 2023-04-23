@@ -82,6 +82,18 @@ class AdminController extends Controller
         }
     }
 
+    public function undoConfirmReservationAdmin($id)
+    {
+        try {
+            $reservations = Reservation::findOrFail($id);
+            $reservations->update(['is_confirmed' => 0]);
+
+            return redirect()->back()->with('success', 'Reserva Desfeita com sucesso');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Erro ao desfazer a reserva.');
+        }
+    }
+
     public function deleteReservationsAdmin($id)
     {
         $reservation = Reservation::findOrFail($id);

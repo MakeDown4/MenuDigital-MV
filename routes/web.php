@@ -50,10 +50,11 @@ Route::middleware('auth')->group(function () {
         // Dashboard admin
         Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-        //Route list and confirm reservations
+        //Route list and confirm/undo confirmed reservations
         Route::get('/admin/list-reservations', [AdminController::class, 'listReservationsAdmin'])->name('admin.list.reservations');
-        Route::delete('/admin/list-reservations/{id}', [AdminController::class, 'deleteReservationsAdmin'])->name('admin.list.reservations.delete');
         Route::put('/admin/list-reservations/{id}', [AdminController::class, 'confirmReservationsAdmin'])->name('admin.list.reservations.update');
+        Route::put('/admin/list-reservations/undo-confirm/{id}', [AdminController::class, 'undoConfirmReservationAdmin'])->name('admin.list.reservations.undoconfirm');
+        Route::delete('/admin/list-reservations/{id}', [AdminController::class, 'deleteReservationsAdmin'])->name('admin.list.reservations.delete');
 
         // Crud routes Menu Items
         Route::get('/admin/menuitems', [AdminController::class, 'listMenuItems'])->name('admin.menuItems.index');

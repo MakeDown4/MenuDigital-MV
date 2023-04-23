@@ -51,9 +51,8 @@ class AdminController extends Controller
         // Recupera todas as categorias de menu do banco de dados
         $menuCategories = MenuCategory::all();
 
-        
         // Retorna a view Inertia para criar um novo item do cardápio
-        return Inertia::render('Admin/MenuItems/Create', [
+        return Inertia::render('Admin/AdminCrud', [
             'menuCategories' => $menuCategories
         ]);
     }
@@ -73,7 +72,7 @@ class AdminController extends Controller
         $menuItem = MenuItem::create($validatedData);
         
         // Redireciona o usuário de volta para a lista de itens do cardápio
-        return to_route('admin.menuItems.index')->with('success', 'Item do cardápio criado com sucesso!');
+        return redirect()->route('admin.menuItems.index')->with('success', 'Item do cardápio criado com sucesso!');
     }
 
     public function editMenuItem($id)

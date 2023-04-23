@@ -3,7 +3,7 @@
   <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
   <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
   <div>
-    <h1>Editar Cardápio</h1>
+    <h1>Lista de Cardápios</h1>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -25,14 +25,16 @@
         </tr>
       </tbody>
     </table>
-    <button class="btn btn-success" @click="showCreateForm">Adicionar Item</button>
+    <button class="btn btn-success" @click="openCreateModal(menuItem)">Adicionar Item</button>
   </div>
 
+<!-- Modal de Edição -->
   <div>
     <div class="modal" :class="{ 'is-active': showEditModal }">
       <form @submit.prevent="submit">
         <div class="modal-background" @click="showEditModal = false"></div>
       <div class="modal-content">
+        <h2>Editar Cardápio</h2>
         <div class="field">
             <div class="form-group">
               <label for="name">Nome:</label>
@@ -63,6 +65,45 @@
           </form>
         </div>
       </div>
+
+<!-- Modal de Criação -->
+  <div>
+    <div class="modal" :class="{ 'is-active': showCreateModal }">
+      <form @submitCreate.prevent="submitCreate">
+        <div class="modal-background" @click="showCreateModal = false"></div>
+      <div class="modal-content">
+        <h2>Criar Cardápio</h2>
+        <div class="field">
+            <div class="form-group">
+              <label for="name">Nome:</label>
+              <input type="text" class="form-control" id="name" name="name" v-model="formCreate.name">
+            </div>
+            <div class="form-group">
+              <label for="description">Descrição do Prato:</label>
+              <textarea class="form-control" id="description" name="description" v-model="formCreate.description"> </textarea >
+            </div>
+            <div class="form-group">
+              <label for="upload_img">Imagem do Prato:</label>
+              <input type="file" class="form-control" id="upload_img" name="upload_img">
+            </div>
+            <div class="form-group">
+              <label for="price">Preço:</label>
+              <input type="number" class="form-control" id="price" name="price" v-model="formCreate.price">
+            </div>
+            <div class="form-group">
+                <label for="category_id">Categoria:</label>
+                <select class="form-control" id="category_id" name="category_id" v-model="formCreate.category_id">
+                  <option v-for="category in allCategories" :key="category.id" :value="category.id">{{ category.name }}</option>
+                </select>
+              </div>
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            </div>
+          </div>
+            <button class="modal-close is-large" aria-label="close" @click="showCreateModal = false"></button>
+          </form>
+        </div>
+      </div>
+
     </div>
 
 </template>
@@ -78,6 +119,8 @@ export default {
     const successMessage = ref(null)
     const errorMessage = ref(null)
 
+    
+  //Função Edit
     let showEditModal = ref(false);
 
     function openEditModal(menuItem){
@@ -90,14 +133,23 @@ export default {
       this.formEdit.category_id = menuItem.category_id
     }
 
+    //Função Create
+    let showCreateModal = ref(false);
+
+    function openCreateModal(){
+      showCreateModal.value = true
+    }
+
+    //Find dos Inputs
     onMounted(() => {
-      const modalEl = document.querySelector('.modal')
-      modalEl.addEventListener('shown.bs.modal', () => {
-        const inputEl = modalEl.querySelector('input')
-        inputEl.focus()
+      const modalElCreate = document.querySelector('.modal')
+      modalElCreate.addEventListener('shown.bs.modal', () => {
+        const inputElCreate = modalElCreate.querySelector('input')
+        inputElCreate.focus()
       })
     })
 
+  //Função Delete
     function deleteMenuItem (menuItem) {
       const confirmed = confirm(`Tem certeza que deseja excluir o item "${menuItem.name}"?`)
       if (confirmed) {
@@ -131,12 +183,25 @@ export default {
         upload_img: null,
         price: null,
         category_id: null
-      }
+      },
+      showCreateModal,
+      openCreateModal,
+      formCreate: {
+        id: null,
+        name: null,
+        description: null,
+        upload_img: null,
+        price: null,
+        category_id: null
+      },
     }
   },
   methods: {
     submit() {
       router.put('/admin/menuitems/' + this.formEdit.id, this.formEdit)
+    },
+    submitCreate() {
+      router.post('/admin/menuitems/', this.formCreate)
     },
   },
 }

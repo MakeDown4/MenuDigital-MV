@@ -7,6 +7,7 @@ use App\Models\MenuItem;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -29,9 +30,39 @@ class AdminController extends Controller
     $users = User::all();
 
     // Retorna a view Inertia com os usuários
-    return Inertia::render('Admin/ListUsers', [
+    return Inertia::render('Admin/AdminListUsers', [
         'users' => $users
         ]);
+    }
+
+    public function makeUserAdmin($id)
+    {
+        $user = User::findOrFail($id);
+        $user->is_admin = $user->is_admin == 1 ? 0 : 1;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Usuário atualizado com sucesso.');
+    }
+
+    public function createAdminUser(Request $request)
+    {
+        // Validar os dados do formulário aqui
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'confirm_password' => 'required|string|min:8',
+        ]);
+    
+        // Crie o novo usuário com o valor is_admin igual a 1
+        $user = new User();
+        $user->name = $validatedData['name'];
+        $user->email = $validatedData['email'];
+        $user->password = Hash::make($validatedData['password']);
+        $user->is_admin = 1;
+        $user->save();
+    
+        return redirect()->back()->with('success', 'Usuário Administrador criado com sucesso.');
     }
 
     public function listMenuItems()

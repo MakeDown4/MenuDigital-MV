@@ -50,6 +50,12 @@ Route::middleware('auth')->group(function () {
         // Dashboard admin
         Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
+        //List Users and Create
+        Route::get('/admin/list-users', [AdminController::class, 'listUsers'])->name('admin.list.users');
+        Route::put('/admin/users/make-admin/{id}', [AdminController::class, 'makeUserAdmin'])->name('admin.users.make-admin');
+        Route::post('/admin/users/create-admin', [AdminController::class, 'createAdminUser'])->name('admin.users.create-admin');
+
+
         //Route list and confirm/undo confirmed reservations
         Route::get('/admin/list-reservations', [AdminController::class, 'listReservationsAdmin'])->name('admin.list.reservations');
         Route::put('/admin/list-reservations/{id}', [AdminController::class, 'confirmReservationsAdmin'])->name('admin.list.reservations.update');

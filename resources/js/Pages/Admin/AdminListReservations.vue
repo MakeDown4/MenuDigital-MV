@@ -49,7 +49,7 @@ const errorMessage = ref(null);
   });
 
 const confirmReservation = (reservationId) => {
-const confirmed = confirm(`Tem certeza que deseja confirmar a reserva "${reservationId}"?`);
+const confirmed = confirm(`Tem certeza que deseja confirmar a reserva ?`);
   if (confirmed) {
     router.put(`/admin/list-reservations/${reservationId}`, {
       is_confirmed: 1
@@ -69,7 +69,7 @@ const confirmed = confirm(`Tem certeza que deseja confirmar a reserva "${reserva
 };
 
 const undoConfirmation = (reservationId) => {
-  const confirmed = confirm(`Tem certeza que deseja desfazer a confirmação da reserva "${reservationId}"?`);
+  const confirmed = confirm(`Tem certeza que deseja desfazer a confirmação da reserva ?`);
   if (confirmed) {
     router.put(`/admin/list-reservations/undo-confirm/${reservationId}`, {
       is_confirmed: 0

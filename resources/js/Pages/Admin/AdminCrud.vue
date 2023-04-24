@@ -1,4 +1,5 @@
 <template>
+  <MenuHome />
   <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
     <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
             <div class="mt-4">
@@ -6,23 +7,25 @@
             </div>
       <div class="container-list text-center">
   <div>
-    <h1>Lista de Cardápios</h1>
+    <h1 class="text-white" style="margin-top: 10vh; margin-bottom: 5vh; font-size: 2rem; font-weight: bold; text-shadow: 5px 5px 15px rgba(255, 0, 0, 1); letter-spacing: 0.1em;">Lista de Cardápio</h1>
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Nome</th>
-          <th>Categoria</th>
-          <th>Imagem</th>
-          <th>Preço</th>
-          <th>Ações</th>
+          <th class="text-center text-white">Nome</th>
+          <th class="text-center text-white">Categoria</th>
+          <th class="text-center text-white">Imagem</th>
+          <th class="text-center text-white">Preço</th>
+          <th class="text-center text-white">Ações</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="menuItem in menuItems" :key="menuItem.id">
-          <td>{{ menuItem.name }}</td>
-          <td>{{ menuItem.category.name }}</td>
-          <td>{{ menuItem.upload_img }}</td>
-          <td>{{ menuItem.price }}</td>
+          <td class="text-center text-white">{{ menuItem.name }}</td>
+          <td class="text-center text-white">{{ menuItem.category.name }}</td>
+            <td class="text-center text-white">
+              <img style="height: 5vh; margin: 0 auto;" :src="'/storage/menuImg/' + menuItem.upload_img" alt="">
+            </td>
+          <td class="text-center text-white">{{ menuItem.price }}</td>
           <td>
             <button class="btn btn-primary" @click="openEditModal(menuItem)">Editar</button>
             <button class="btn btn-danger" @click="deleteMenuItem(menuItem)">Excluir</button>
@@ -116,14 +119,17 @@
 <script>
 import { usePage, router } from '@inertiajs/vue3'
 import { ref, onMounted, reactive } from 'vue'
+import MenuHome from '../../Components/MenuHome.vue';
 
 export default {
+    components: {
+      MenuHome,
+    },
   data() {
     const { props: { menuItems, allCategories }, visit, inertia } = usePage()
 
     const successMessage = ref(null)
     const errorMessage = ref(null)
-
 
     function redirectToHome() {
         window.location.href = route('home');
@@ -141,7 +147,6 @@ export default {
       this.formEdit.price = menuItem.price
       this.formEdit.category_id = menuItem.category_id
     }
-
 
     //Função Create
     let showCreateModal = ref(false);
@@ -327,8 +332,15 @@ export default {
 }
 
 .container-list{
-  display: flex;
-  justify-content: center;
+  margin: 0 auto;
+  width: 90%;
+}
+
+body {
+  background-image: url('/images/image5.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .table{

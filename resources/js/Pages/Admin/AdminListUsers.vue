@@ -8,24 +8,25 @@
       <div class="mt-4">
         <button class="text-sm font-medium text-gray-600 underline" @click="redirectToHome()">Voltar</button>
       </div>
+      <MenuHome />
   <div class="text-center">
-    <h1>Lista de Usuários</h1>
+    <h1 class="text-white" style="margin-top: 5vh; margin-bottom: 5vh; font-size: 2rem; font-weight: bold; text-shadow: 5px 10px 15px rgba(255, 0, 0, 1); letter-spacing: 0.1em;">Lista de usuários</h1>
     <table class="table table-striped text-center">
       <thead>
         <tr>
-          <th>Nome de Usuário</th>
-          <th>E-mail</th>
-          <th>Administrador ?</th>
-          <th>Data de Criação</th>
-          <th>Ações</th>
+          <th class="text-white">Nome de Usuário</th>
+          <th class="text-white">E-mail</th>
+          <th class="text-white">Administrador ?</th>
+          <th class="text-white">Data de Criação</th>
+          <th class="text-white">Ações</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="user in users" :key="user.id">
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.is_admin ? 'Sim' : 'Não' }}</td>
-          <td>{{ formatDate(user.created_at) }}</td>
+          <td class="text-white">{{ user.name }}</td>
+          <td class="text-white">{{ user.email }}</td>
+          <td class="text-white">{{ user.is_admin ? 'Sim' : 'Não' }}</td>
+          <td class="text-white">{{ formatDate(user.created_at) }}</td>
           <td>
             <button type="button" v-if="user.name !== 'admin'"
                     @click="toggleAdmin(user)"
@@ -74,8 +75,12 @@
 <script>
 import { computed, ref, reactive } from 'vue'
 import { usePage, router } from '@inertiajs/vue3'
+import MenuHome from '../../Components/MenuHome.vue';
 
 export default {
+  components: {
+      MenuHome
+    },
   setup() {
     const { props, inertia } = usePage()
 
@@ -206,5 +211,12 @@ export default {
 
 .table{
   display: inline-table;
+}
+
+body {
+  background-image: url('/images/image5.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 </style>

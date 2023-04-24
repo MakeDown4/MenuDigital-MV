@@ -1,6 +1,6 @@
 <template>
   <MobileMenu v-if="isMobile" :menu="menu" />
-  <DesktopMenu v-else :menu="menu" />
+  <DesktopMenu v-else :menu="menu" :user="user" />
 </template>
 
 <script>
@@ -20,27 +20,28 @@ export default {
       { name: 'Home', link: route('home') },
       { name: 'Cardápio', link: route('menuitems.index') },
       { name: 'Login', link: 'login' },
-      { name: 'Cadastrar', link: 'register' },
+      { name: 'Cadastrar', link: 'register' }
     ]
     if(user){
           menu = [
-            { name: 'Editar Perfil', link: route('dashboard') },
             { name: 'Solicitar Reservas', link: route('reservations.create') },
-            { name: 'Cardápio', link: route('menuitems.index') }
+            { name: 'Cardápio', link: route('menuitems.index') },
+            { name: 'Editar Cadastro', link: route('profile.edit') }
         ]
       if(user.is_admin === 1){
           menu = [
-            { name: 'Editar Perfil', link: route('dashboard') },
             { name: 'Gerenciar Reservas', link: route('admin.list.reservations') },
             { name: 'Gerenciar Usuários', link: route('admin.list.users')  },
             { name: 'Gerenciar Cardápio', link: route('admin.menuItems.index'),},
             { name: 'Solicitar Reserva', link: route('reservations.create') },
-            { name: 'Cardápio', link: route('menuitems.index') }
+            { name: 'Cardápio', link: route('menuitems.index') },
+            { name: 'Editar Cadastro', link: route('profile.edit') }
         ]
       }
     }
 
     return {
+      user,
       menu,
       isMobile: false
     }

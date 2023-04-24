@@ -1,22 +1,28 @@
 <template>
-<nav id="nav-bar" class="navbar-invisible justify-content-center navbar navbar-white bg-white navbar-expand fixed-top">
-  <div class="justify-content-center">
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <template v-for="item in menu" :key="item.name">
-        <li v-if="!(item.showForGuests && $page.props.auth.user)" class="nav-item active item-menu-home" >
+  <nav id="nav-bar" class="navbar-invisible justify-content-center navbar navbar-white bg-white navbar-expand fixed-top">
+    <div class="justify-content-center">
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <template v-for="item in menu" :key="item.name">
+          <li class="nav-item active item-menu-home" >
             <a class="nav-link" :href="item.link">{{item.name}}</a>
           </li>
         </template>
       </ul>
     </div>
+    <div style="padding-left: 10vh" class="text-white" v-if="user">
+      <button type="submit" @click="logout()" :href="route('logout')">Log Out</button>
+    </div>
   </nav>
 </template>
 
 <script>
+import { router } from '@inertiajs/vue3'
+
 export default {
   name: 'DesktopMenu',
   props: {
-    menu: Array
+    menu: Array,
+    user: Object
   },
   created() {
     window.addEventListener('scroll', this.handleScroll);
@@ -27,13 +33,16 @@ export default {
         return;
       }
       const scrollTop = window.pageYOffset;
-        document.getElementById('nav-bar').classList.remove('navbar-invisible');
-        
+      document.getElementById('nav-bar').classList.remove('navbar-invisible');
+      
       if(scrollTop == 0){
         document.getElementById('nav-bar').classList.add('navbar-invisible');
-        
       }
     },
+    logout() {
+      router.post('/logout');
+      location.reload()
+    }
   }
 }
 </script>
@@ -71,10 +80,10 @@ export default {
   animation: ease-in 1s;
 }
 
-  @media (max-width:1100px) {
-      .logo {
-        height: 70px !important;
-        margin-left: 20px !important;
-      }
-    }
+@media (max-width:1100px) {
+  .logo {
+    height: 70px !important;
+    margin-left: 20px !important;
+  }
+}
 </style>

@@ -1,24 +1,22 @@
 <template>
 <div v-if="form.successMessage" class="alert alert-success">{{ form.successMessage }}</div>
 <div v-if="form.errorMessage" class="alert alert-danger">{{ form.errorMessage }}</div>
-<Head>
-    <title>Cadastrar Reservas</title>
-</Head>
-<GuestLayout>
+<MenuHome />
+<h1 class="text-center text-white" style="margin-top: 10vh; margin-bottom: -10vh; font-size: 2rem; font-weight: bold; text-shadow: 5px 5px 15px rgba(255, 0, 0, 1); letter-spacing: 0.1em;">Solicitar Reserva</h1>
     <div class="center">
         <form @submit.prevent="submit">
             <div class="form-group">
-                <InputLabel class="required" for="num_people">Quantidade de Pessoas:</InputLabel>
+                <InputLabel class="required text-white" for="num_people">Quantidade de Pessoas:</InputLabel>
                 <input type="number" name="num_people" id="num_people" v-model="form.num_people" class="form-control" />
             </div>
 
             <div class="form-group">
-                <InputLabel class="required" for="date">Data:</InputLabel>
+                <InputLabel class="required text-white" for="date">Data:</InputLabel>
                     <input id="date" name="date" type="date" v-model="form.date" class="form-control" />
             </div>
 
             <div class="form-group">
-                <InputLabel class="required" for="time">Horário:</InputLabel>
+                <InputLabel class="required text-white" for="time">Horário:</InputLabel>
                     <select name="time" id="time" v-model="form.time" class="form-control">
                         <option v-for="option in timeOptions" :value="option.value" :key="option.value">{{ option.label }}</option>
                     </select>
@@ -26,7 +24,7 @@
 
 
             <div class="form-group">
-                <InputLabel for="remarks">Comentários Adicionais (não é obrigatório):</InputLabel>
+                <InputLabel class="text-white" for="remarks">Comentários Adicionais (não é obrigatório):</InputLabel>
                 <input type="text" name="remarks" id="remarks" v-model="form.remarks" class="form-control" />
             </div>
 
@@ -38,7 +36,6 @@
         <button class="text-sm font-medium text-gray-600 underline" @click="redirectToHome()">Voltar</button>
       </div>
     </div>
-    </GuestLayout>
 </template>
 
 <script setup>
@@ -49,6 +46,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import MenuHome from '../../Components/MenuHome.vue';
 
 const form = reactive({
     num_people: 0,
@@ -107,10 +105,11 @@ function submit() {
 }
 </script>
 
-<style scoped>
+<style>
 .center {
-    display: block;
-    justify-content: center;
+    width: 30%;
+    margin:  0 auto;
+    margin-top: 15vh;
 }
 
 .center-submit {
@@ -120,5 +119,12 @@ function submit() {
 .required:before {
     content:" *"; 
     color: red;
+}
+
+body {
+  background-image: url('/images/image5.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 </style>

@@ -5,8 +5,6 @@ use App\Http\Controllers\MenuItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationsController;
 use Illuminate\Foundation\Application;
-use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -30,26 +28,12 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/menuImg/{filename}', function ($filename) {
-    $path = storage_path('app/menuImg/' . $filename);
-
-    if (!File::exists($path)) {
-        abort(404);
-    }
-
-    $file = File::get($path);
-    $type = File::mimeType($path);
-
-    $response = Response::make($file, 200);
-    $response->header("Content-Type", $type);
-
-    return $response;
-})->name('menuImg');
-
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+//MenuItems route
+Route::get('/menuitems', [MenuItemController::class, 'index'])->name('menuitems.index');
 
 Route::middleware('auth')->group(function () {
     //Profile Routes
@@ -57,8 +41,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    //MenuItems route
-    Route::get('/menuitems', [MenuItemController::class, 'index'])->name('menuitems.index');
 
     //Reservations routes
     Route::get('/reservations/create', [ReservationsController::class, 'create'])->name('reservations.create');
@@ -73,7 +55,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/list-users', [AdminController::class, 'listUsers'])->name('admin.list.users');
         Route::put('/admin/users/make-admin/{id}', [AdminController::class, 'makeUserAdmin'])->name('admin.users.make-admin');
         Route::post('/admin/users/create-admin', [AdminController::class, 'createAdminUser'])->name('admin.users.create-admin');
-
 
         //Route list and confirm/undo confirmed reservations
         Route::get('/admin/list-reservations', [AdminController::class, 'listReservationsAdmin'])->name('admin.list.reservations');

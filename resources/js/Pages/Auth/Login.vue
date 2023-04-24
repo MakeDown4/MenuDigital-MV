@@ -33,6 +33,9 @@ const submit = () => {
 <template>
     <GuestLayout class="h-screen">
         <Head title="Log in" />
+            <div class="mt-4">
+                <button class="text-sm font-medium text-gray-600 underline" @click="redirectToHome()">Voltar</button>
+            </div>
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
@@ -84,6 +87,7 @@ const submit = () => {
                 <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Entrar
                 </PrimaryButton>
+            </div>
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
@@ -91,11 +95,7 @@ const submit = () => {
                 >
                     Esqueceu sua senha ?
                 </Link>
-            </div>
         </form>
-            <div class="mt-4">
-                <button class="text-sm font-medium text-gray-600 underline" @click="redirectToHome()">Voltar</button>
-            </div>
         <ApplicationLogo class="h-3 w-3 fill-current text-gray-500" />
     </GuestLayout>
 

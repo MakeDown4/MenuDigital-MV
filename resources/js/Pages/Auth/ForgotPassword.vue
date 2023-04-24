@@ -16,6 +16,10 @@ const form = useForm({
     email: '',
 });
 
+function redirectToLogin() {
+      window.location.href = '/login';
+    }
+
 const submit = () => {
     form.post(route('password.email'));
 };
@@ -26,8 +30,7 @@ const submit = () => {
         <Head title="Forgot Password" />
 
         <div class="mb-4 text-sm text-gray-600">
-            Forgot your password? No problem. Just let us know your email address and we will email you a password reset
-            link that will allow you to choose a new one.
+            Esqueceu sua senha ? Sem problemas. Informe seu endereço de e-mail e enviaremos um e-mail com uma redefinição de senha.
         </div>
 
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
@@ -43,7 +46,6 @@ const submit = () => {
                     type="email"
                     class="mt-1 block w-full"
                     v-model="form.email"
-                    required
                     autofocus
                     autocomplete="username"
                 />
@@ -53,9 +55,12 @@ const submit = () => {
 
             <div class="flex items-center justify-end mt-4">
                 <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Email Password Reset Link
+                    Link de redefinição de senha
                 </PrimaryButton>
             </div>
         </form>
+            <div class="mt-4">
+                <button class="text-sm font-medium text-gray-600 underline" @click="redirectToLogin()">Voltar</button>
+            </div>
     </GuestLayout>
 </template>

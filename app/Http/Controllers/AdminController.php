@@ -7,6 +7,7 @@ use App\Models\MenuItem;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -136,16 +137,18 @@ class AdminController extends Controller
     public function createMenuItem(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'string|max:255',
             'description' => 'nullable|string|max:1000',
-            'price' => 'required|numeric|min:0',
-            'file' => 'nullable|image|max:4096',
-            'category_id' => 'required|exists:menu_categories,id',
+            'price' => 'numeric|min:0',
+            'file' => 'nullable|image',
+            'category_id' => 'exists:menu_categories,id'
         ]);
+    
+        $fileName = $validatedData['file']->hashName();
 
-        $storagePath = Storage::disk('local')->put('/menuImg', $validatedData['file']);
-
-        $data = array_merge($validatedData, ['upload_img' => $validatedData['file']->getClientOriginalName()]);
+        $validatedData['file']->storeAs('public/menuImg', $fileName);
+    
+        $data = array_merge($validatedData, ['upload_img' => $fileName]);
 
         $menuItem = MenuItem::create($data);
 
@@ -159,20 +162,22 @@ class AdminController extends Controller
             'name' => 'string|max:255',
             'description' => 'nullable|string|max:1000',
             'price' => 'numeric|min:0',
-            'file' => 'nullable|image|max:4096',
+            'file' => 'nullable|image',
             'category_id' => 'exists:menu_categories,id'
         ]);
+    
+        $fileName = $validatedData['file']->hashName();
 
-        $storagePath = Storage::disk('local')->put('/menuImg', $validatedData['file']);
-
-        $data = array_merge($validatedData, ['upload_img' => $validatedData['file']->getClientOriginalName()]);
-
+        $validatedData['file']->storeAs('public/menuImg', $fileName);
+    
+        $data = array_merge($validatedData, ['upload_img' => $fileName]);
+    
         $updateMmenuItem = MenuItem::findOrFail($id);
-
+    
         $updateMmenuItem->update($data);
-
+    
         return to_route('admin.menuItems.index')->with('success', 'Item do cardápio atualizado com sucesso!');
-    }
+    }    
 
     public function deleteMenuItem($id)
     {

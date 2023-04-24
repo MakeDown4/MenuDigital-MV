@@ -14,6 +14,10 @@ const form = useForm({
     terms: false,
 });
 
+function redirectToLogin() {
+      window.location.href = '/login';
+    }
+
 const submit = () => {
     form.post(route('register'), {
         onFinish: () => form.reset('password', 'password_confirmation'),
@@ -108,5 +112,8 @@ const submit = () => {
                 </PrimaryButton>
             </div>
         </form>
+            <div class="mt-4">
+                <button class="text-sm font-medium text-gray-600 underline" @click="redirectToLogin()">Voltar</button>
+            </div>
     </GuestLayout>
 </template>

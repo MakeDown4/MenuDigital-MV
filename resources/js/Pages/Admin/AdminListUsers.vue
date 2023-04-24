@@ -5,6 +5,9 @@
     <div v-if="errorMessage" class="alert alert-danger">
         <span>{{ errorMessage }}</span>
     </div>
+      <div class="mt-4">
+        <button class="text-sm font-medium text-gray-600 underline" @click="redirectToHome()">Voltar</button>
+      </div>
   <div class="text-center">
     <h1>Lista de Usuários</h1>
     <table class="table table-striped text-center">
@@ -101,6 +104,10 @@ export default {
         password: null,
     })
 
+    function redirectToHome() {
+      window.location.href = route('home');
+    }
+
     function submit(){
         if (formCreateUser.password != formCreateUser.confirm_password) {
             errorMessage.value = 'As senhas não correspondem.';
@@ -145,6 +152,7 @@ export default {
     return {
       users: computed(() => props.users),
       formatDate,
+      redirectToHome,
       toggleAdmin,
       successMessage,
       errorMessage,

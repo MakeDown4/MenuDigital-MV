@@ -1,6 +1,9 @@
 <template>
   <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
     <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+            <div class="mt-4">
+                <button class="text-sm font-medium text-gray-600 underline" @click="redirectToHome()">Voltar</button>
+            </div>
       <div class="container-list text-center">
   <div>
     <h1>Lista de Cardápios</h1>
@@ -116,12 +119,17 @@ import { ref, onMounted, reactive } from 'vue'
 
 export default {
   data() {
-    const { props: { menuItems, allCategories }, route, visit, inertia } = usePage()
+    const { props: { menuItems, allCategories }, visit, inertia } = usePage()
 
     const successMessage = ref(null)
     const errorMessage = ref(null)
 
-  //Função Edit
+
+    function redirectToHome() {
+        window.location.href = route('home');
+    }
+
+    //Função Edit
     let showEditModal = ref(false);
 
     function openEditModal(menuItem){
@@ -133,6 +141,7 @@ export default {
       this.formEdit.price = menuItem.price
       this.formEdit.category_id = menuItem.category_id
     }
+
 
     //Função Create
     let showCreateModal = ref(false);
@@ -172,6 +181,7 @@ export default {
     return {
       isSubmitting: false,
       menuItems,
+      redirectToHome,
       allCategories,
       showEditModal,
       deleteMenuItem,

@@ -21,7 +21,6 @@
         "@vitejs/plugin-vue": "^4.1.0",
         "bootstrap": "^5.2.3",
         "vue": "^3.2.47",
-        "vue-js-modal": "^2.0.1",
         "vue3-bootstrap": "^1.0.0"
     }
 }

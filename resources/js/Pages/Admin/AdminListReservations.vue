@@ -1,6 +1,9 @@
 <template>
     <div v-if="successMessage" class="alert alert-success">{{ successMessage }}</div>
     <div v-if="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+            <div class="mt-4">
+                <button class="text-sm font-medium text-gray-600 underline" @click="redirectToHome()">Voltar</button>
+            </div>
   <div class="text-center">
     <h1>Lista de Reservas</h1>
     <table class="table table-striped">
@@ -29,6 +32,7 @@
         </tr>
       </tbody>
     </table>
+
   </div>
 </template>
 
@@ -47,6 +51,10 @@ const errorMessage = ref(null);
     successMessage: null,
     errorMessage: null
   });
+
+function redirectToHome() {
+      window.location.href = route('home');
+}
 
 const confirmReservation = (reservationId) => {
 const confirmed = confirm(`Tem certeza que deseja confirmar a reserva ?`);

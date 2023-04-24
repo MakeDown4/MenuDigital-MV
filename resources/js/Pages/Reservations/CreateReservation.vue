@@ -34,6 +34,9 @@
                 <PrimaryButton type="submit" class="btn btn-primary center-submit">Criar Reserva</PrimaryButton>
             </div>
         </form>
+            <div class="mt-4">
+        <button class="text-sm font-medium text-gray-600 underline" @click="redirectToHome()">Voltar</button>
+      </div>
     </div>
     </GuestLayout>
 </template>
@@ -74,6 +77,10 @@ const timeOptions = [
     { label: '16:30', value: '16:30' },
     { label: '17:00', value: '17:00' },
 ];
+
+function redirectToHome() {
+      window.location.href = route('home');
+}
 
 function submit() {
     router.post('/reservations', form, {

@@ -6,6 +6,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 
 defineProps({
     canResetPassword: {
@@ -30,14 +31,13 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <GuestLayout class="h-screen">
         <Head title="Log in" />
-
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
 
-        <form @submit.prevent="submit">
+        <form @submit.prevent="submit" style="width: 100%;">
             <div>
                 <label class="block font-medium text-sm text-gray-700">
                     <span> E-mail </span>
@@ -80,7 +80,10 @@ const submit = () => {
                 </label>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
+            <div class="text-center flex items-center justify-end mt-4">
+                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Entrar
+                </PrimaryButton>
                 <Link
                     v-if="canResetPassword"
                     :href="route('password.request')"
@@ -88,11 +91,12 @@ const submit = () => {
                 >
                     Esqueceu sua senha ?
                 </Link>
-
-                <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Entrar
-                </PrimaryButton>
             </div>
         </form>
+            <div class="mt-4">
+                <button class="text-sm font-medium text-gray-600 underline" @click="redirectToHome()">Voltar</button>
+            </div>
+        <ApplicationLogo class="h-3 w-3 fill-current text-gray-500" />
     </GuestLayout>
+
 </template>

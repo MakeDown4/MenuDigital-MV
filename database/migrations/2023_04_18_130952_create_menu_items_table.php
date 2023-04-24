@@ -39,6 +39,10 @@ class CreateMenuItemsTable extends Migration
         Schema::dropIfExists('menu_items', function (Blueprint $table) {
             $table->foreign('category_id')->references('id')->on('menu_categories');
         });
+
+        Schema::dropIfExists('menu_categories', function (Blueprint $table) {
+        });
+
         Schema::dropIfExists('menu_items');
     }    
 }

@@ -19,6 +19,7 @@ Certifique-se de que seu sistema atende aos seguintes requisitos destes arquivos
 4. Execute o comando `php artisan key:generate` para gerar a chave do aplicativo.
 5. Execute o comando `php artisan migrate` para executar as migrações do banco de dados.
 6. Execute o comando `php artisan db:seed` para popular o banco de dados com dados de teste.
+7. Execute o comando `php artisan storage:link` para criar o link simbólico para a pasta correta que irá salvar as imagens de upload do banco.
 
 ## Execução
 

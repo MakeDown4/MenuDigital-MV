@@ -1,7 +1,3 @@
-# Teste
-
-Este é um teste para o projeto de Cardápio Digital da Moraes Velleda.
-
 ## Requisitos
 
 Certifique-se de que seu sistema atende aos seguintes requisitos destes arquivos instalados na máquina:
